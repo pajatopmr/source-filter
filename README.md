@@ -28,4 +28,20 @@ Boston meet-up group co-organizer):
     }
 
 The solution provided by this project tweaks Sean's example so that
-the code can be made even more readable.
+the code can be made even more readable, albeit in a Kotlin/JVM form:
+
+    fun filterSources(path: String, ext: String = ".kt", excludes: List<String>): List<String> {
+        fun filterSources(file: File): List<String> {
+            val result = mutableListOf<String>()
+            when {
+                file.isFile && file.name.endsWith(ext) && !excludes.contains(file.name) -> result.add(file.path)
+                file.isDirectory && !excludes.contains(file.name) -> {
+                    for (subFile in file.listFiles())
+                        result.addAll(filterSources(subFile))
+                }
+            }
+            return result
+        }
+
+        return filterSources(File(path))
+    }
