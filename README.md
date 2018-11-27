@@ -31,17 +31,17 @@ The solution provided by this project tweaks Sean's example so that
 the code can be made even more readable and clean (in the Uncle Bob
 sense), albeit in a Kotlin/JVM form:
 
-    fun filterSources(file: File, ext: String = ".kt", excludes: List<String>): List<String> {
-        fun filterSubFiles(): List<String> {
+    fun filterSources(path: String, ext: String = ".kt", excludes: List<String>): List<String> {
+        fun filterSubFiles(file: File): List<String> {
             val result = mutableListOf<String>()
             for (subFile in file.listFiles())
                 result.addAll(filterSources(subFile, ext, excludes))
             return result
         }
         
-        when {
+        return when {
             file.isFile && file.name.endsWith(ext) && !excludes.contains(file.name) -> listOf(file.path)
-            file.isDirectory && !excludes.contains(file.name) -> filterSubFiles()
+            file.isDirectory && !excludes.contains(file.name) -> filterSubFiles(file)
             else -> listOf()
         }
     }
@@ -49,6 +49,6 @@ sense), albeit in a Kotlin/JVM form:
 To achieve better parity with Sean's original code, one would call filterSources() like so:
 
     ...
-    val filteredSources = filterSources(File(path), ".swift", listOf("Build", "muter.tmp", "Tests.swift").apply {sort()}
+    val filteredSources = filterSources(path, ".swift", listOf("Build", "muter.tmp", "Tests.swift").apply {sort()}
     ...
 
