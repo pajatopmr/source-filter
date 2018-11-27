@@ -8,9 +8,10 @@ exclusion names.
 The exercise arose from a question posed by Sean O (Learning Swift
 Boston meet-up group co-organizer):
 
-    SeanO [6:15 PM]
-    does anyone have suggestions on how I could reduce the amount of code I have in this solution? this function is responsible for discovering swift source code files, while also excluding files that are part of a blacklist.
-    ```func sourceFilesContained(in path: String) -> [String] {
+"does anyone have suggestions on how I could reduce the amount of code I have in this solution? this function is responsible for discovering swift source code files, while also excluding files that are part of a blacklist."
+
+
+    func sourceFilesContained(in path: String) -> [String] {
         let subpaths = FileManager.default.subpaths(atPath: path) ?? []
         return subpaths
             .filter {
@@ -24,7 +25,7 @@ Boston meet-up group co-organizer):
             }
             .map { "\(path)/\($0)"}
             .sorted()
-    }```
+    }
 
 The solution provided by this project tweaks Sean's example so that
 the code can be made even more readable.
