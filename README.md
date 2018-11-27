@@ -35,10 +35,10 @@ sense), albeit in a Kotlin/JVM form:
         fun filterSubFiles(file: File): List<String> {
             val result = mutableListOf<String>()
             for (subFile in file.listFiles())
-                result.addAll(filterSources(subFile, ext, excludes))
+                result.addAll(filterSources(subFile.path, ext, excludes))
             return result
         }
-        
+
         return when {
             file.isFile && file.name.endsWith(ext) && !excludes.contains(file.name) -> listOf(file.path)
             file.isDirectory && !excludes.contains(file.name) -> filterSubFiles(file)
@@ -51,4 +51,3 @@ To achieve better parity with Sean's original code, one would call filterSources
     ...
     val filteredSources = filterSources(path, ".swift", listOf("Build", "muter.tmp", "Tests.swift").apply {sort()}
     ...
-
