@@ -28,20 +28,27 @@ Boston meet-up group co-organizer):
     }
 
 The solution provided by this project tweaks Sean's example so that
-the code can be made even more readable, albeit in a Kotlin/JVM form:
+the code can be made even more readable and clean (in the Uncle Bob
+sense), albeit in a Kotlin/JVM form:
 
-    fun filterSources(path: String, ext: String = ".kt", excludes: List<String>): List<String> {
-        fun filterSources(file: File): List<String> {
+    fun filterSources(file: File, ext: String = ".kt", excludes: List<String>): List<String> {
+        fun filterSubFiles(): List<String> {
             val result = mutableListOf<String>()
-            when {
-                file.isFile && file.name.endsWith(ext) && !excludes.contains(file.name) -> result.add(file.path)
-                file.isDirectory && !excludes.contains(file.name) -> {
-                    for (subFile in file.listFiles())
-                        result.addAll(filterSources(subFile))
-                }
-            }
+            for (subFile in file.listFiles())
+                result.addAll(filterSources(subFile, ext, excludes))
             return result
         }
-
-        return filterSources(File(path))
+        
+        when {
+            file.isFile && file.name.endsWith(ext) && !excludes.contains(file.name) -> listOf(file.path)
+            file.isDirectory && !excludes.contains(file.name) -> filterSubFiles()
+            else -> listOf()
+        }
     }
+
+To achieve better parity with Sean's original code, one would call filterSources() like so:
+
+    ...
+    val filteredSources = filterSources(File(path), ".swift", listOf("Build", "muter.tmp", "Tests.swift").apply {sort()}
+    ...
+
